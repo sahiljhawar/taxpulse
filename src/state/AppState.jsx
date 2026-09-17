@@ -1,100 +1,76 @@
 import React, { createContext, useContext, useMemo, useReducer } from 'react'
 
-export const CATEGORIES = ['Income', 'Purchase', 'Job change', 'Donation']
+// Category breakdown of the treasure. Order matters for the dashboard grid.
+export const CATEGORY_ORDER = ['Work equipment', 'Travel', 'Home office', 'Education']
 
-// Amount-band -> dollar delta per category. Hardcoded so the demo always
-// produces believable, consistent numbers.
-export const SCENARIOS = {
-  Income: {
-    'No change': 0,
-    'Under 500 EUR': 40,
-    '500 to 2000 EUR': 210,
-    '2000+ EUR': 480,
-  },
-  Purchase: {
-    'No change': 0,
-    'Under 500 EUR': 25,
-    '500 to 2000 EUR': 95,
-    '2000+ EUR': 260,
-  },
-  'Job change': {
-    'No change': 0,
-    'Under 500 EUR': -60,
-    '500 to 2000 EUR': -150,
-    '2000+ EUR': -320,
-  },
-  Donation: {
-    'No change': 0,
-    'Under 500 EUR': 15,
-    '500 to 2000 EUR': 70,
-    '2000+ EUR': 180,
-  },
+// The single hardcoded receipt scenario used for the MVP demo. One clear
+// end-to-end flow beats several half-built ones.
+export const DEMO_RECEIPT = {
+  name: 'Monitor',
+  amount: 189,
+  category: 'Work equipment',
+  reason: 'Likely work equipment',
+  impact: 57,
 }
 
-export const BAND_LABELS = {
-  Income: 'Did your income change this period?',
-  Purchase: 'Any notable purchases this period?',
-  'Job change': 'Did your job situation change?',
-  Donation: 'Did you make any donations?',
+// The Context Agent's "wow moment": a partially-documented trip it noticed
+// from calendar + receipts, with one item still missing.
+export const TRIP_OPPORTUNITY = {
+  title: 'AI Conference Hamburg',
+  items: [
+    { name: 'Train ticket', amount: 89, found: true },
+    { name: 'Conference ticket', amount: 79, found: true },
+    { name: 'Hotel invoice', amount: null, found: false },
+  ],
+}
+
+const AGENT_STEPS = ['Receipt Agent', 'Tax Agent', 'Treasure Agent']
+
+const initialCategories = {
+  'Work equipment': 210,
+  Travel: 168,
+  'Home office': 48,
+  Education: 0,
+}
+
+function sumCategories(categories) {
+  return Object.values(categories).reduce((a, b) => a + b, 0)
 }
 
 const initialState = {
-  estimate: -120, // loss state to start, matches the pitch copy
-  loggedItems: [false, false, false, true], // 3 of 4 logged
-  frequency: 'Biweekly',
-  receipts: [], // persistent thumbnails across sessions
-  sessionReceipts: [], // receipts added during current check-in flow
-  sessionAnswers: {}, // category -> { band, delta }
-  previousEstimate: -120,
-  lastDelta: 0,
+  categories: initialCategories,
+  treasure: sumCategories(initialCategories), // 426
+  previousTreasure: sumCategories(initialCategories),
+  readiness: 72,
+  previousReadiness: 72,
+  lastClaim: null, // { category, impact }
+  hotelInvoiceAdded: false,
+  sessionReceipt: null, // thumbnail added during upload, for display only
 }
 
 function reducer(state, action) {
   switch (action.type) {
-    case 'ANSWER_QUESTION': {
-      const { category, band } = action
-      const delta = SCENARIOS[category][band]
+    case 'ADD_SESSION_RECEIPT': {
+      return { ...state, sessionReceipt: action.receipt }
+    }
+    case 'CLAIM_RECEIPT': {
+      const { category, impact } = DEMO_RECEIPT
+      const newCategories = {
+        ...state.categories,
+        [category]: state.categories[category] + impact,
+      }
       return {
         ...state,
-        sessionAnswers: {
-          ...state.sessionAnswers,
-          [category]: { band, delta },
-        },
+        categories: newCategories,
+        previousTreasure: state.treasure,
+        treasure: sumCategories(newCategories),
+        previousReadiness: state.readiness,
+        readiness: Math.min(100, state.readiness + 6),
+        lastClaim: { category, impact },
       }
     }
-    case 'ADD_RECEIPT': {
-      return {
-        ...state,
-        sessionReceipts: [...state.sessionReceipts, action.receipt],
-      }
-    }
-    case 'COMMIT_CHECKIN': {
-      const deltaSum = Object.values(state.sessionAnswers).reduce(
-        (sum, a) => sum + a.delta,
-        0
-      )
-      const answeredCategories = Object.keys(state.sessionAnswers)
-      const newLoggedItems = CATEGORIES.map((cat, i) =>
-        answeredCategories.includes(cat) ? true : state.loggedItems[i]
-      )
-      return {
-        ...state,
-        estimate: state.estimate + deltaSum,
-        previousEstimate: state.estimate,
-        lastDelta: deltaSum,
-        loggedItems: newLoggedItems,
-        receipts: [...state.receipts, ...state.sessionReceipts],
-      }
-    }
-    case 'CLEAR_SESSION': {
-      return {
-        ...state,
-        sessionAnswers: {},
-        sessionReceipts: [],
-      }
-    }
-    case 'SET_FREQUENCY': {
-      return { ...state, frequency: action.frequency }
+    case 'ADD_HOTEL_INVOICE': {
+      return { ...state, hotelInvoiceAdded: true }
     }
     case 'RESET_DEMO': {
       return initialState
@@ -117,3 +93,5 @@ export function useAppState() {
   if (!ctx) throw new Error('useAppState must be used within AppStateProvider')
   return ctx
 }
+
+export { AGENT_STEPS }

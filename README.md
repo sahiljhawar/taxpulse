@@ -1,6 +1,8 @@
-# Tax Pulse
+# Taxfix Treasure
 
-Mobile-first demo of a "Tax Pulse" check-in app, built with React, Vite, and Tailwind CSS. Hackathon demo — no backend, no real tax logic, all state is in-memory.
+Mobile-first demo of "Taxfix Treasure" — find the money hiding in your year. Built with React, Vite, and Tailwind CSS. Hackathon demo — no backend, no real tax logic, all state is in-memory.
+
+**Flow:** Dashboard (Tax Treasure + Readiness) → scan a receipt → a simulated multi-agent pipeline (Receipt Agent, Tax Agent, Treasure Agent) estimates its tax impact → claim it and watch the Treasure grow → the Context Agent surfaces a second opportunity (a partially-documented work trip) as the demo's wow moment.
 
 ## Quick install
 
@@ -47,4 +49,5 @@ npm run preview   # preview the production build locally
 ## Demo tips
 
 - Long-press the "Hi Alex" greeting on the Dashboard to reset all state back to the starting scenario.
-- Everything (estimate, logged items, receipts, frequency) resets on a page refresh — it's session-only, by design.
+- On the upload screen, "Use demo receipt instead" skips the file picker so you can run the pitch without a real photo.
+- Everything (treasure, readiness, receipts) resets on a page refresh — it's session-only, by design.

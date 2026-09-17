@@ -1,9 +1,9 @@
 import { Routes, Route } from 'react-router-dom'
 import { AppStateProvider } from './state/AppState.jsx'
 import Dashboard from './screens/Dashboard.jsx'
-import CheckIn from './screens/CheckIn.jsx'
-import Result from './screens/Result.jsx'
-import FrequencySettings from './screens/FrequencySettings.jsx'
+import Upload from './screens/Upload.jsx'
+import Reward from './screens/Reward.jsx'
+import Opportunity from './screens/Opportunity.jsx'
 
 export default function App() {
   return (
@@ -12,9 +12,9 @@ export default function App() {
         <div className="w-full max-w-md min-h-screen bg-bg relative">
           <Routes>
             <Route path="/" element={<Dashboard />} />
-            <Route path="/checkin" element={<CheckIn />} />
-            <Route path="/result" element={<Result />} />
-            <Route path="/settings" element={<FrequencySettings />} />
+            <Route path="/upload" element={<Upload />} />
+            <Route path="/reward" element={<Reward />} />
+            <Route path="/opportunity" element={<Opportunity />} />
           </Routes>
         </div>
       </div>
