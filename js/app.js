@@ -26,7 +26,6 @@ function render() {
 
   $('desktop-nav').innerHTML = navMarkup;
   $('mobile-nav').innerHTML = navMarkup;
-  $('breadcrumb').textContent = navigation.find(([route]) => route === active)?.[2] || 'Overview';
   $('main').innerHTML = `<div class="tp-page">${screens[state.route]()}</div>
     <div class="tp-demo-note">
       ${icon('shield')}
@@ -146,26 +145,6 @@ const actions = {
     toast('Fictional draft prepared. Nothing was submitted.');
   },
   'payslip': payslip,
-  'anomaly': anomaly,
-  'investigate': investigate,
-  'save-investigation': () => {
-    closeDialog();
-    toast('Demo review noted for this session. No payroll changes made.');
-  },
-  'year-end': yearEnd,
-  'filing-preview': filingPreview,
-  'simulator': simulator,
-  'save-scenario': () => {
-    const input = $('new-distance');
-    if (!input || input.value === '' || !input.checkValidity()) {
-      input?.reportValidity();
-      return;
-    }
-    closeDialog();
-    toast('Scenario reviewed for this demo. Your estimates are unchanged.');
-  },
-  'download': downloadSummary,
-  'share': shareIdea,
   'close-dialog': () => closeDialog(),
   'reset': () => {
     Object.assign(state, JSON.parse(JSON.stringify(initialState)));
@@ -207,20 +186,6 @@ document.addEventListener('change', event => {
     state.reminders = event.target.checked;
     toast(state.reminders ? 'Demo preference enabled. No actual notifications.' : 'Demo reminders disabled.');
   }
-});
-
-document.addEventListener('input', event => {
-  if (event.target.id !== 'new-distance') return;
-  const field = event.target;
-  if (field.value === '' || !field.checkValidity()) {
-    $('simulation-annual').textContent = '—';
-    $('simulation-month').textContent = 'Enter a distance from 0 to 100 km.';
-    return;
-  }
-  const annual = Math.round((Number(field.value) - 32) * 13);
-  const sign = annual < 0 ? '−' : annual > 0 ? '+' : '';
-  $('simulation-annual').textContent = `${sign}${eur(Math.abs(annual))}`;
-  $('simulation-month').textContent = `Approximately ${sign}${eur(Math.round(Math.abs(annual) / 12))} / month`;
 });
 
 $('overlay').addEventListener('click', event => {

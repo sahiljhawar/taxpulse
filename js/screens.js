@@ -54,11 +54,6 @@ const screens = {
           </div>
         </section>
 
-        <section class="tp-card tp-card-soft">
-          <div class="tp-row">${icon('flag')}<h3>Your year-end treasure map</h3></div>
-          <p class="tp-small tp-mt12">Know what’s missing before filing season. No countdowns. No pressure.</p>
-          ${textButton('Explore the Q4 preview', 'year-end')}
-        </section>
       </div>
     </div>`,
 
@@ -279,29 +274,8 @@ const screens = {
           <p class="tp-small tp-mt12">Your ${eur(totalTreasure())} Tax Treasure is a separate estimate of captured opportunities. It is not added to the €1,044 annual Gehaltsplus example.</p>
           ${textButton('Understand the two numbers', 'estimate-info')}
         </section>
-        ${routeButton('Explore the annual breakdown', 'breakdown', 'secondary')}
       </div>
     </div>`,
-
-  breakdown: () => {
-    const categories = [
-      ['train', 'Work commute', 540, 'Your one-way distance and actual commuting days may be relevant. Travel costs and tax effects are different amounts.'],
-      ['home', 'Home office', 240, 'Days worked from home may qualify, depending on the applicable conditions and your situation.'],
-      ['monitor', 'Work equipment', 180, 'Professional use, purchase price, timing, and tax treatment need to be reviewed.'],
-      ['cap', 'Education', 84, 'Professional training may be relevant. Education and degree programs can have different tax treatment.']
-    ];
-    return `<div class="tp-flow-narrow">
-      ${back('salary')}
-      ${heading('Where could your Gehaltsplus come from?', 'A simple view of a fictional annual estimate.', 'Understand the estimate')}
-      <div class="tp-stack">${categories.map(([i, title, amount, explanation]) =>
-        ``).join('')}</div>
-      <div class="tp-impact-card tp-mt24"><p class="tp-small">Illustrative annual tax benefit · €1,044</p>
-        <div class="tp-impact-value">+€87</div><p class="tp-small tp-mt8">potentially per month, assuming 12 equal months</p>
-      </div>
-      <div class="tp-mt20">${button('Review my next step', 'application')}</div>
-      <p class="tp-disclaimer">The requested allowance itself has not been calculated. A prior refund cannot simply be divided by 12 to determine eligibility or a monthly effect.</p>
-    </div>`;
-  },
 
   payday: () => `
     <div class="tp-flow">
@@ -339,11 +313,6 @@ const screens = {
             <div class="tp-mt20">${state.septemberChecked
               ? routeButton('Back to Gehaltsplus', 'salary')
               : button('Complete September check', 'complete-payday')}</div>
-          </section>
-          <section class="tp-card">
-            <h3>And when something changes?</h3>
-            <p class="tp-small tp-mt8">Try the alternate payslip scenario.</p>
-            ${textButton('Preview an unexpected change', 'anomaly')}
           </section>
         </div>
       </div>
@@ -386,11 +355,6 @@ const screens = {
           <div class="tp-row">${box('shield', 'lime')}<div><h3>${trackedMonths()} months of useful checks</h3><p class="tp-tiny tp-mt8">Not a login streak.</p></div></div>
           <p class="tp-small tp-mt16">We track meaningful progress — evidence saved, information reviewed, and salary checks completed. No points, penalties, or daily pressure.</p>
         </section>
-        <section class="tp-card tp-card-purple">
-          <h3>A decision on the horizon?</h3>
-          <p class="tp-small tp-mt12">Explore how a shorter commute might change the tax picture — and what the estimate leaves out.</p>
-          ${textButton('Try “What if…?”', 'simulator')}
-        </section>
       </div>
     </div>`,
 
@@ -413,8 +377,6 @@ const screens = {
       </section>
       <div class="tp-stack tp-mt20">
         ${button('Understand the estimates', 'estimate-info', 'secondary')}
-        ${button('See your year-end map', 'year-end', 'secondary')}
-        ${button('Share the TaxPulse idea', 'share', 'secondary')}
       </div>
       <div class="tp-center tp-mt16">${textButton('Reset the demo', 'reset', 'back')}</div>
     </div>`

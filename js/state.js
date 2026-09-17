@@ -60,5 +60,5 @@ const navigation = [
 ];
 const routeGroups = {
   scan: 'receipts', analysis: 'receipts', reward: 'receipts',
-  opportunity: 'agent', payday: 'salary', breakdown: 'salary'
+  opportunity: 'agent', payday: 'salary'
 };
